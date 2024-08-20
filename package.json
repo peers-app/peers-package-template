@@ -15,8 +15,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "peers-sdk": "*"
+  },
+  "devDependencies": {
     "@types/node": "^22.4.0",
-    "peers-sdk": "*",
     "typescript": "^5.5.4"
   }
 }
