@@ -1,14 +1,7 @@
 import { helloWorld, helloWorld2 } from "./tool-examples";
 
-const packageInfo = {
-  packageId: '00lzvxswqo8mx6ijlnkksmyb8',
-
-  // TODO set a friendly name.  This is the name that will be displayed in the UI, optional but recommended.
-  // name: 'Put your name here',    
-};
-
+// peers requires that you export the package components in this shape
 module.exports = {
-  packageInfo,
   toolInstances: [
     helloWorld,
     helloWorld2,
