@@ -32,7 +32,7 @@ export const helloWorld2 = createTool({
   name: `hello-world2`,
   usageDescription: [
     `Identical to hello-world, but with a Zod input schema.`,
-    `Specifying the input schema as a Zod object allows for more control over and allows inferring types.`,
+    `Specifying the input schema as a Zod object allows for more control over validation and allows inferring types.`,
   ].join(' '),
 }, {
   inputSchema,
