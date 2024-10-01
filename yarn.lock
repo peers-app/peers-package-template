@@ -14,17 +14,21 @@ knockout@^3.5.1:
   resolved "https://registry.yarnpkg.com/knockout/-/knockout-3.5.1.tgz#62c81e81843bea2008fd23c575edd9ca978e75cf"
   integrity sha512-wRJ9I4az0QcsH7A4v4l0enUpkS++MBx0BnL/68KaLzJg7x1qmbjSlwEoCNol7KTYZ+pmtI7Eh2J0Nu6/2Z5J/Q==
 
-peers-sdk@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/peers-sdk/-/peers-sdk-0.0.5.tgz#67eb9d8458244179d8b2c408532a7cdda7df47db"
-  integrity sha512-RSG/QgvqSjus66HKBMFH9GIDhTVKVF+KGUWtwEz88ZhsghHkQt/8G2UjXDKJKaQ89qghH8ChS8YJMRP0Hn0R/A==
+lodash@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
+
+peers-sdk@*:
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/peers-sdk/-/peers-sdk-0.0.12.tgz#180f15245c3701d59ddc56d31fc4927b91c42056"
+  integrity sha512-WBVtVsmK1QYVw4eAfF8KOK0yZfL0hPfsjb1e5SQpsLQHILKF5CgRoeNNmCZCUqrArIn/cocFfGAzBmYvtnj6QA==
   dependencies:
-    "@types/node" "^22.4.0"
     knockout "^3.5.1"
-    typescript "^5.4.5"
+    lodash "^4.17.21"
     zod "^3.23.8"
 
-typescript@^5.4.5, typescript@^5.5.4:
+typescript@^5.5.4:
   version "5.5.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.4.tgz#d9852d6c82bad2d2eda4fd74a5762a8f5909e9ba"
   integrity sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==

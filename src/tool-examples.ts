@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createTool, IOFieldType, IOSchemaType } from "peers-sdk";
+import { createTool, FieldType, IOSchemaType } from "peers-sdk";
 
 
 // input schema as JavaScript object
@@ -12,7 +12,7 @@ export const helloWorld = createTool({
   ].join(' '),
   inputSchema: {
     type: IOSchemaType.complex,
-    fields: [{ name: 'greetWho', type: IOFieldType.string, optional: true, description: 'Who should be greeted', }],
+    fields: [{ name: 'greetWho', type: FieldType.string, optional: true, description: 'Who should be greeted', }],
   },
 }, async (args) => {
   const { greetWho } = args; // note that this is untyped
