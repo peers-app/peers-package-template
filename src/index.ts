@@ -1,12 +1,12 @@
+import { IPeersPackage } from "peers-sdk";
 import { helloWorld, helloWorld2 } from "./tool-examples";
 
-// peers requires that you export the package components in this shape
-module.exports = {
+const peersPackage: IPeersPackage = {
   toolInstances: [
     helloWorld,
     helloWorld2,
   ],
-  assistants: [],
-  workflows: [],
-  events: [],
-}
+};
+
+// peers requires that you export the package components in this way
+module.exports = peersPackage;
