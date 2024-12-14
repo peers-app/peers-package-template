@@ -15,7 +15,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "peers-sdk": "*"
+    "peers-sdk": "latest"
   },
   "devDependencies": {
     "@types/node": "^22.4.0",

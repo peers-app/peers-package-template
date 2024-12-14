@@ -19,15 +19,6 @@ lodash@^4.17.21:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
-peers-sdk@*:
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/peers-sdk/-/peers-sdk-0.0.12.tgz#180f15245c3701d59ddc56d31fc4927b91c42056"
-  integrity sha512-WBVtVsmK1QYVw4eAfF8KOK0yZfL0hPfsjb1e5SQpsLQHILKF5CgRoeNNmCZCUqrArIn/cocFfGAzBmYvtnj6QA==
-  dependencies:
-    knockout "^3.5.1"
-    lodash "^4.17.21"
-    zod "^3.23.8"
-
 typescript@^5.5.4:
   version "5.5.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.4.tgz#d9852d6c82bad2d2eda4fd74a5762a8f5909e9ba"
