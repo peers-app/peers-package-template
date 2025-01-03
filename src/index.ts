@@ -9,7 +9,6 @@ const peersPackage: IPeersPackage = {
   ],
   workflows: [],
   events: [],
-  UIs: [],
 };
 
 // peers requires that you export the package components in this way
