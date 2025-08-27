@@ -1,15 +1,11 @@
 {
   "name": "peers-package-template",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "repository": "https://github.com/peers-app/peers-package-template.git",
   "author": "<package-author>",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "peers": {
-    "packageId": "<package-id>",
-    "name": "<package-name>"
-  },
   "scripts": {
     "build:package": "webpack --mode production --no-watch --config webpack.package.config.js",
     "build:routes": "webpack --mode production --no-watch --config webpack.routes.config.js",

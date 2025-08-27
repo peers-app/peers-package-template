@@ -1,18 +1,16 @@
 import { IPeersPackage } from "peers-sdk";
-import { packageId } from "./ids";
-import { toolInstances } from "./tools";
+import { packageId, packageName } from "./consts";
 
-const peersPackage: IPeersPackage = {
+const peersPackage: IPeersPackage = {  
   packageId,
   hasUIBundle: true,
   appNavs: [
     {
-      name: "<package-name>",
+      name: packageName,
       iconClassName: "bi bi-list-ul",
       navigationPath: "app"
     }
   ],
-  toolInstances,
 };
 
 // Attach to provided `exports` object

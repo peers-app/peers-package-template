@@ -1,5 +1,5 @@
 import { registerPeersUIRoute } from "peers-sdk";
-import { packageId, appScreenId } from "./ids";
+import { packageId, appScreenId } from "./consts";
 
 registerPeersUIRoute({
   packageId,
