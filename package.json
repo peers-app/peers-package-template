@@ -11,17 +11,27 @@
     "name": "<package-name>"
   },
   "scripts": {
-    "dev": "concurrently \"webpack --watch\" \"tsc --watch\"",
-    "build": "tsc && webpack --no-watch",
+    "build:package": "webpack --mode production --no-watch --config webpack.package.config.js",
+    "build:routes": "webpack --mode production --no-watch --config webpack.routes.config.js",
+    "build:uis": "webpack --mode production --no-watch --config webpack.uis.config.js",
+    "build": "npm run build:package && npm run build:routes && npm run build:uis",
+    "dev:package": "webpack --mode development --watch --config webpack.package.config.js",
+    "dev:routes": "webpack --mode development --watch --config webpack.routes.config.js",
+    "dev:uis": "webpack --mode development --watch --config webpack.uis.config.js",
+    "dev": "concurrently \"npm run dev:package\" \"npm run dev:routes\" \"npm run dev:uis\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
+  "peerDependencies": {
     "peers-sdk": "*",
-    "react": "^19.0.0"
+    "react": "18.3.1"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.195",
     "@types/node": "^22.4.0",
-    "@types/react": "^19.0.1",
+    "@types/react": "18.3.1",
     "concurrently": "^9.1.0",
     "css-loader": "^7.1.2",
     "source-map-loader": "^5.0.0",
@@ -29,6 +39,7 @@
     "ts-loader": "^9.5.1",
     "typescript": "^5.5.4",
     "webpack": "^5.97.1",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "zod": "3.23.8"
   }
 }

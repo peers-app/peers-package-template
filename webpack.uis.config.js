@@ -1,15 +1,11 @@
 var webpack = require('webpack');
 
 module.exports = {
-  // entry: './src/index.ts',
-  entry: './src/index.ui.ts',
-
-  mode: 'development',
-  watch: true,
+  entry: './src/uis.ts',
   devtool: 'source-map',
   
   output: {
-    filename: '00m4okzm28k8tqhmrcw00mcyp.uis.js',
+    filename: 'uis.bundle.js',
     path: __dirname + '/dist',
     chunkFormat: false,
   },
@@ -20,7 +16,7 @@ module.exports = {
   
   module: {
     rules: [
-      // All files with a '.ts' or '.tsx' extension will be handled by 'ts -loader'.
+      // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
       { test: /\.tsx?$/, loader: "ts-loader" },
       
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
@@ -40,5 +36,7 @@ module.exports = {
   // must use the global react object for the UI to load correctly
   externals: {
     "react": "React",
+    "peers-sdk": "PeersSDK",
+    'zod': 'zod',
   },
 };
