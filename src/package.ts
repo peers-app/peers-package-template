@@ -3,7 +3,6 @@ import { packageId, packageName } from "./consts";
 
 const peersPackage: IPeersPackage = {  
   packageId,
-  hasUIBundle: true,
   appNavs: [
     {
       name: packageName,

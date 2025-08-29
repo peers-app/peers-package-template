@@ -1,3 +1,12 @@
-// import all UI components here so they are bundled and registered in the peers runtime
+import { IPeersPackageUIs } from "peers-sdk";
+import "./ui/app";
+import { AppScreenUI } from "./ui/app";
 
-import "./ui/app"
+const uis: IPeersPackageUIs = {
+  uis: [
+    AppScreenUI
+  ]
+};
+
+declare const exportUIs: (uis: IPeersPackageUIs) => void;
+exportUIs(uis);

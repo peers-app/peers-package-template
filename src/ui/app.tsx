@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { registerPeersUI } from "peers-sdk";
 import { appScreenId, packageName } from "../consts";
+import { IPeersUI, zodAnyObjectOrArray } from 'peers-sdk';
 
-function AppScreen() {
+export function AppScreen() {
   const [count, setCount] = useState(0);
 
   return (
@@ -15,7 +15,8 @@ function AppScreen() {
   );
 }
 
-registerPeersUI({
-  component: AppScreen,
+export const AppScreenUI: IPeersUI = {
   peersUIId: appScreenId,
-});
+  content: AppScreen,
+  propsSchema: zodAnyObjectOrArray,
+}
