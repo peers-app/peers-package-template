@@ -36,7 +36,7 @@ module.exports = {
   // must use the global react object for the UI to load correctly
   externals: {
     "react": "React",
-    "peers-sdk": "PeersSDK",
+    '@peers-app/peers-sdk': 'PeersSDK',
     'zod': 'zod',
   },
 };

@@ -32,7 +32,7 @@ module.exports = {
 
   externals: {
     // treat peers runtime API as external
-    'peers-sdk': 'PeersSDK',    
+    '@peers-app/peers-sdk': 'PeersSDK',
     'zod': 'zod',
   },
 };
