@@ -1,7 +1,7 @@
 // ATTENTION: Keep the routes bundle as small as possible since all routes for all packages have to be preloaded before any UI can render.
 //            Avoid importing unnecessary code, particularly components.  This should be completely decoupled from your UI bundle.
 
-import type { IPeersPackageRoutes, IPeersUIRoute } from "peers-sdk";
+import type { IPeersPackageRoutes, IPeersUIRoute } from "@peers-app/peers-sdk";
 import { appScreenId, packageId } from "./consts";
 
 const appScreenRoute: IPeersUIRoute = {

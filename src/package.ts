@@ -1,4 +1,4 @@
-import type { IPeersPackage } from "peers-sdk";
+import type { IPeersPackage } from "@peers-app/peers-sdk";
 import { packageId, packageName } from "./consts";
 
 const peersPackage: IPeersPackage = {  
