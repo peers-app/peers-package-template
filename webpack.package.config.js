@@ -25,7 +25,23 @@ module.exports = {
 
   module: {
     rules: [
-      { test: /\.tsx?$/, loader: 'ts-loader' },
+      { 
+        test: /\.tsx?$/, 
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                ['@babel/preset-env', { 
+                  // Target older browsers to ensure full async/await transpilation for Hermes
+                  targets: 'ie 11',
+                }]
+              ],
+            }
+          },
+          'ts-loader'
+        ]
+      },
       { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
     ],
   },

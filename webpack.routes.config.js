@@ -17,7 +17,23 @@ module.exports = {
   module: {
     rules: [
       // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
-      { test: /\.tsx?$/, loader: "ts-loader" },
+      { 
+        test: /\.tsx?$/, 
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                ['@babel/preset-env', { 
+                  // Target older browsers to ensure full async/await transpilation for Hermes
+                  targets: 'ie 11',
+                }]
+              ],
+            }
+          },
+          'ts-loader'
+        ]
+      },
       
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
       { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
