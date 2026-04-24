@@ -6,7 +6,7 @@ module.exports = {
 
   output: {
     filename: "uis.bundle.js",
-    path: __dirname + "/dist",
+    path: `${__dirname}/dist`,
     chunkFormat: false,
   },
   resolve: {

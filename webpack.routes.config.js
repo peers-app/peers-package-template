@@ -6,7 +6,7 @@ module.exports = {
 
   output: {
     filename: "routes.bundle.js",
-    path: __dirname + "/dist",
+    path: `${__dirname}/dist`,
     chunkFormat: false,
   },
   resolve: {
