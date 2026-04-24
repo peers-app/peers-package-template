@@ -1,3 +1,4 @@
+// biome-ignore lint/correctness/noUnusedImports: classic JSX (`jsx: "react"`) needs `React` in scope for the peers UI bundle
 import React, { useState } from "react";
 import { appScreenId, packageName } from "../consts";
 import { type IPeersUI, zodAnyObjectOrArray } from "@peers-app/peers-sdk";
