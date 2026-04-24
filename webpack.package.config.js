@@ -1,19 +1,19 @@
-const path = require('path');
+const path = require("path");
 
 module.exports = {
-  entry: './src/package.ts',
-  devtool: 'source-map',
+  entry: "./src/package.ts",
+  devtool: "source-map",
 
   output: {
-    filename: 'package.bundle.js',
-    path: path.resolve(__dirname, 'dist'),
+    filename: "package.bundle.js",
+    path: path.resolve(__dirname, "dist"),
     library: {
-      type: 'commonjs2',   // so we can `require()` or `eval()` easily
+      type: "commonjs2", // so we can `require()` or `eval()` easily
     },
   },
 
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.json'],
+    extensions: [".ts", ".tsx", ".js", ".json"],
     symlinks: true,
     fallback: {
       // optional: avoid pulling in Node polyfills
@@ -25,30 +25,33 @@ module.exports = {
 
   module: {
     rules: [
-      { 
-        test: /\.tsx?$/, 
+      {
+        test: /\.tsx?$/,
         use: [
           {
-            loader: 'babel-loader',
+            loader: "babel-loader",
             options: {
               presets: [
-                ['@babel/preset-env', { 
-                  // Target older browsers to ensure full async/await transpilation for Hermes
-                  targets: 'ie 11',
-                }]
+                [
+                  "@babel/preset-env",
+                  {
+                    // Target older browsers to ensure full async/await transpilation for Hermes
+                    targets: "ie 11",
+                  },
+                ],
               ],
-            }
+            },
           },
-          'ts-loader'
-        ]
+          "ts-loader",
+        ],
       },
-      { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
+      { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
     ],
   },
 
   externals: {
     // treat peers runtime API as external
-    '@peers-app/peers-sdk': 'PeersSDK',
-    'zod': 'zod',
+    "@peers-app/peers-sdk": "PeersSDK",
+    zod: "zod",
   },
 };

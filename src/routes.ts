@@ -8,13 +8,11 @@ const appScreenRoute: IPeersUIRoute = {
   packageId,
   peersUIId: appScreenId,
   path: `package-nav/${packageId}/app`,
-  uiCategory: 'screen',
+  uiCategory: "screen",
 };
 
 const routes: IPeersPackageRoutes = {
-  routes: [
-    appScreenRoute
-  ]
+  routes: [appScreenRoute],
 };
 
 declare const exportRoutes: (routes: IPeersPackageRoutes) => void;

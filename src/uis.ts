@@ -3,9 +3,7 @@ import "./ui/app";
 import { AppScreenUI } from "./ui/app";
 
 const uis: IPeersPackageUIs = {
-  uis: [
-    AppScreenUI
-  ]
+  uis: [AppScreenUI],
 };
 
 declare const exportUIs: (uis: IPeersPackageUIs) => void;
