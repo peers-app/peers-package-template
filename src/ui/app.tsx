@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { appScreenId, packageName } from "../consts";
-import { IPeersUI, zodAnyObjectOrArray } from "@peers-app/peers-sdk";
+import { type IPeersUI, zodAnyObjectOrArray } from "@peers-app/peers-sdk";
 
 export function AppScreen() {
   const [count, setCount] = useState(0);
