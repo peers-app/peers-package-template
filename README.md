@@ -18,8 +18,8 @@ Your package IDs have already been generated in `src/consts.ts`. The first thing
 my-package/
 ├── package.json          # Package metadata — name, version, peers.packageId
 ├── src/
-│   ├── consts.ts         # All IDs for this package (packageId, screenIds, etc.)
-│   ├── package.ts        # IPeersPackage — registers tools, tables, assistants, nav
+│   ├── consts.ts         # All IDs for this package (packageId, contractId, screenIds, etc.)
+│   ├── package.ts        # definePackage() — declares contracts, tools, tables, assistants, nav
 │   ├── routes.ts         # IPeersPackageRoutes — maps URL paths to screens
 │   ├── uis.ts            # IPeersPackageUIs — exports React components
 │   └── ui/
@@ -54,14 +54,16 @@ peers ui reload
 5. Add the UI to `src/uis.ts`
 
 ### New Table (Persistent Data)
-1. Add a table ID to `src/consts.ts`
-2. Create `src/data/<table>.ts` with a Zod schema and `ITableDefinition`
-3. Import and add to `tableDefinitions` in `src/package.ts`
+1. Create `src/data/<table>.ts` with a Zod schema and `ITableDefinition`
+2. Import and add to your contract in `src/package.ts`:
+   - `main.tables = [{ metaData, schema }]` — declares the table shape in the contract
+   - `main.tableDefinitions = [{ metaData, schema }]` — registers the table at runtime
 
 ### New Tool (callable by AI or users)
-1. Add a tool ID to `src/consts.ts`
-2. Create `src/tools/<tool>.ts` with an `ITool` and `IToolInstance`
-3. Import and add to `toolInstances` in `src/package.ts`
+1. Create `src/tools/<tool>.ts` with an `ITool` and `IToolInstance`
+2. Import and add to your contract in `src/package.ts`:
+   - `main.tools = [toolInstance]` — declares the tool shape in the contract
+   - `main.toolInstances = [toolInstance]` — registers the tool at runtime
 
 ## Key SDK Interfaces
 
@@ -69,7 +71,9 @@ From `@peers-app/peers-sdk`:
 
 | Interface | Purpose |
 |-----------|---------|
-| `IPeersPackage` | Main package definition |
+| `definePackage` | Entry point — declares contracts, tools, tables, assistants, and nav |
+| `PackageBuilder` | Top-level builder passed to the `definePackage` callback |
+| `ContractBuilder` | Scoped builder for a single contract (tables, tools, observables) |
 | `IPeersUI` | A single React screen (`peersUIId`, `content`, `propsSchema`) |
 | `IPeersUIRoute` | Maps a URL path to a UI |
 | `ITableDefinition` | Custom SQLite table with Zod schema |
@@ -89,13 +93,13 @@ They're already declared as externals in the webpack configs.
 
 ## Export Pattern
 
-The `package.ts` bundle must export via:
+The `package.ts` bundle must export the package definition via:
 
 ```typescript
-(exports as any).exports = peersPackage;
+(exports as any).packageDefinition = packageDefinition;
 ```
 
-This is already set up in the template — don't change it.
+The `PackageLoader` detects this export and uses the contract-based install path to register tools, tables, and assistants. This is already set up in the template.
 
 ## Reference
 
