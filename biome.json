@@ -1,12 +1,35 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.3.11/schema.json",
-  "root": false,
-  "extends": "//",
+  "root": true,
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true, "defaultBranch": "main" },
+  "files": { "ignoreUnknown": true, "includes": ["**", "!!**/node_modules", "!!**/dist"] },
+  "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2, "lineWidth": 100, "lineEnding": "lf" },
   "linter": {
+    "enabled": true,
     "rules": {
-      "suspicious": {
-        "noExplicitAny": "off"
+      "recommended": true,
+      "correctness": { "useExhaustiveDependencies": "off" },
+      "suspicious": { "noExplicitAny": "off" }
+    }
+  },
+  "javascript": { "formatter": { "quoteStyle": "double" } },
+  "overrides": [
+    {
+      "includes": ["src/ui/**/*.tsx"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noLabelWithoutControl": "off",
+            "noStaticElementInteractions": "off",
+            "useAriaPropsSupportedByRole": "off",
+            "useButtonType": "off",
+            "useFocusableInteractive": "off",
+            "useKeyWithClickEvents": "off",
+            "useSemanticElements": "off",
+            "useValidAnchor": "off"
+          }
+        }
       }
     }
-  }
+  ]
 }
