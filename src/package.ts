@@ -5,10 +5,9 @@ import { contractId, packageId, packageName } from "./consts";
 const packageDefinition = definePackage((pkg) => {
   pkg.packageId = packageId;
   pkg.version = version;
-  pkg.versionTag = "dev";
 
   // Main contract -- add tables, tools, and observables here
-  const _main = pkg.contract(contractId, 1, packageName, "dev");
+  const _main = pkg.contract(contractId, 1, packageName);
   // _main.tables = [...];
   // _main.tools = [...];
   // _main.toolInstances = [...];
