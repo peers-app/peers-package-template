@@ -9,7 +9,7 @@ Replace this file with a description of your package. This text appears in the P
 Your package IDs have already been generated in `src/consts.ts`. The first thing to do is:
 
 1. Update `package.json` — set `name`, `description`, and `author`
-2. Rename `README.md` (this file) to describe what your package does
+2. Rewrite `README.md` (this file) to describe what your package does
 3. Build and verify: `npm run build` then reload the app with `peers ui reload`
 
 ## Package Structure
@@ -38,7 +38,7 @@ npm run build   # Build all three bundles (run this after any code change)
 npm run dev     # Watch mode — rebuilds automatically on file save
 ```
 
-After rebuilding, reload the app to pick up your changes:
+After rebuilding, reload the app (`cmd | ctrl + r`) to pick up your changes:
 
 ```bash
 peers ui reload
@@ -86,8 +86,9 @@ These are provided by the Peers runtime — do **not** bundle them:
 | Import | Provided as |
 |--------|-------------|
 | `react` | `React` |
-| `@peers-app/peers-sdk` | `PeersSDK` |
 | `zod` | `zod` |
+| `@peers-app/peers-sdk` | `PeersSDK` |
+| `@peers-app/peers-ui` | `PeersUI` |
 
 They're already declared as externals in the webpack configs.
 
