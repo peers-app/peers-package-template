@@ -2,7 +2,11 @@ import { definePackage } from "@peers-app/peers-sdk";
 import { version } from "../package.json";
 import { contractId, packageId, packageName } from "./consts";
 
-const packageDefinition = definePackage((pkg) => {
+/**
+ * Contract-based package definition loaded by the Peers package installer.
+ * Webpack (`library.type: "commonjs2"`) places this on `module.exports.packageDefinition`.
+ */
+export const packageDefinition = definePackage((pkg) => {
   pkg.packageId = packageId;
   pkg.version = version;
 
@@ -21,5 +25,3 @@ const packageDefinition = definePackage((pkg) => {
     },
   ];
 });
-
-(exports as any).packageDefinition = packageDefinition;

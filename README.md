@@ -94,13 +94,15 @@ They're already declared as externals in the webpack configs.
 
 ## Export Pattern
 
-The `package.ts` bundle must export the package definition via:
+The `package.ts` bundle must export the package definition as a named export:
 
 ```typescript
-(exports as any).packageDefinition = packageDefinition;
+export const packageDefinition = definePackage((pkg) => {
+  // ...
+});
 ```
 
-The `PackageLoader` detects this export and uses the contract-based install path to register tools, tables, and assistants. This is already set up in the template.
+Webpack (`library.type: "commonjs2"`) places this on `module.exports.packageDefinition`. The `PackageLoader` detects that export and uses the contract-based install path to register tools, tables, and assistants. This is already set up in the template.
 
 ## Reference
 
