@@ -1,110 +1,116 @@
 # My Package
 
-Replace this file with a description of your package. This text appears in the Peers app UI when users browse packages.
+Replace this file and the `description` in `package.json` with a description of your package.
 
----
+This template creates an isolated Peers package by default. Provider code is stored as data in
+`dist/package.bundle.js` and can run only in the supervised isolated worker. Routes and React UI
+remain separate renderer bundles.
 
-## Getting Started
+## Getting started
 
-Your package IDs have already been generated in `src/consts.ts`. The first thing to do is:
+Package, contract, and screen IDs are generated in `src/ids.json`. Start by:
 
-1. Update `package.json` — set `name`, `description`, and `author`
-2. Rewrite `README.md` (this file) to describe what your package does
-3. Build and verify: `npm run build` then reload the app with `peers ui reload`
-
-## Package Structure
-
-```
-my-package/
-├── package.json          # Package metadata — name, version, peers.packageId
-├── src/
-│   ├── consts.ts         # All IDs for this package (packageId, contractId, screenIds, etc.)
-│   ├── package.ts        # definePackage() — declares contracts, tools, tables, assistants, nav
-│   ├── routes.ts         # IPeersPackageRoutes — maps URL paths to screens
-│   ├── uis.ts            # IPeersPackageUIs — exports React components
-│   └── ui/
-│       └── app.tsx       # Default "Hello World" screen — replace with your UI
-├── dist/                 # Built bundles (generated — do not edit)
-│   ├── package.bundle.js
-│   ├── routes.bundle.js
-│   └── uis.bundle.js
-└── webpack.*.config.js   # Build configs (one per bundle)
-```
-
-## Build Commands
+1. Updating `package.json` with the package description and author
+2. Rewriting this README
+3. Building and checking the package:
 
 ```bash
-npm run build   # Build all three bundles (run this after any code change)
-npm run dev     # Watch mode — rebuilds automatically on file save
+npm install
+npm run build
+npm run lint
 ```
 
-After rebuilding, reload the app (`cmd | ctrl + r`) to pick up your changes:
+## Package structure
+
+```text
+my-package/
+├── build-package.mjs          # Builds the isolated manifest/provider artifact
+├── package.json               # Package metadata and peers.packageId
+├── src/
+│   ├── ids.json               # Package, contract, and screen IDs
+│   ├── consts.ts              # Typed renderer exports from ids.json
+│   ├── contract.ts            # Renderer-facing contract definition
+│   ├── provider-source.js     # Code that may run only in the isolated worker
+│   ├── routes.ts              # URL paths, loaded eagerly
+│   ├── uis.ts                 # React UI registry, loaded lazily
+│   └── ui/
+│       └── app.tsx            # Starter screen with shared state
+├── webpack.routes.config.js
+└── webpack.uis.config.js
+```
+
+The build produces:
+
+- `dist/package.bundle.js` — `PEERS_ISOLATED_PACKAGE_V1` manifest and provider source
+- `dist/routes.bundle.js` — renderer route metadata
+- `dist/uis.bundle.js` — renderer React components
+
+## Development
+
+`npm run dev` watches routes and UI. After changing `build-package.mjs`, `src/ids.json`, or
+`src/provider-source.js`, run:
+
+```bash
+npm run build:package
+```
+
+Reload renderer-only changes with:
 
 ```bash
 peers ui reload
 ```
 
-## Adding Features
+After rebuilding `package.bundle.js`, restart Electron or reinstall the package so its isolated
+manifest/provider is loaded.
 
-### New Screen
-1. Add a screen ID to `src/consts.ts`
-2. Create a React component in `src/ui/`
-3. Export an `IPeersUI` from the component file
-4. Add an `IPeersUIRoute` in `src/routes.ts`
-5. Add the UI to `src/uis.ts`
+## Shared UI state
 
-### New Table (Persistent Data)
-1. Create `src/data/<table>.ts` with a Zod schema and `ITableDefinition`
-2. Import and add to your contract in `src/package.ts`:
-   - `main.tables = [{ metaData, schema }]` — declares the table shape in the contract
-   - `main.tableDefinitions = [{ metaData, schema }]` — registers the table at runtime
+The starter contract exposes a writable `state` observable backed by a group-scoped persistent
+variable. `src/ui/app.tsx` consumes it through `createContractConsumer`, so state is reactive and
+shared through Peers without starting the provider worker.
 
-### New Tool (callable by AI or users)
-1. Create `src/tools/<tool>.ts` with an `ITool` and `IToolInstance`
-2. Import and add to your contract in `src/package.ts`:
-   - `main.tools = [toolInstance]` — declares the tool shape in the contract
-   - `main.toolInstances = [toolInstance]` — registers the tool at runtime
+Replace the example `clickCount` value with your own small reactive state. For record-oriented
+data, declare package-owned tables instead of accumulating records in the state object.
 
-## Key SDK Interfaces
+## Adding a table
 
-From `@peers-app/peers-sdk`:
+1. Add the table schema once to `manifest.tables` in `build-package.mjs`.
+2. Reference public tables by name in `provides[].tables`.
+3. Mirror the public shape in `src/contract.ts`.
+4. Use `consumer.tables[tableName]` from the renderer.
 
-| Interface | Purpose |
-|-----------|---------|
-| `definePackage` | Entry point — declares contracts, tools, tables, assistants, and nav |
-| `PackageBuilder` | Top-level builder passed to the `definePackage` callback |
-| `ContractBuilder` | Scoped builder for a single contract (tables, tools, observables) |
-| `IPeersUI` | A single React screen (`peersUIId`, `content`, `propsSchema`) |
-| `IPeersUIRoute` | Maps a URL path to a UI |
-| `ITableDefinition` | Custom SQLite table with Zod schema |
-| `ITool` / `IToolInstance` | Function callable by AI or users |
+Tables omitted from `provides[].tables` remain private to provider tools. Peers derives their
+physical identity from the package ID; do not add table IDs or physical names.
 
-## External Dependencies
+## Adding a tool
 
-These are provided by the Peers runtime — do **not** bundle them:
+1. Add the tool's metadata to `provides[].tools` in `build-package.mjs`.
+2. Register the matching implementation in `src/provider-source.js`:
 
-| Import | Provided as |
-|--------|-------------|
-| `react` | `React` |
-| `zod` | `zod` |
-| `@peers-app/peers-sdk` | `PeersSDK` |
-| `@peers-app/peers-ui` | `PeersUI` |
-
-They're already declared as externals in the webpack configs.
-
-## Export Pattern
-
-The `package.ts` bundle must export the package definition as a named export:
-
-```typescript
-export const packageDefinition = definePackage((pkg) => {
-  // ...
+```javascript
+registerContractTool(CONTRACT_ID, 1, "toolName", function toolName(input) {
+  return { result: input };
 });
 ```
 
-Webpack (`library.type: "commonjs2"`) places this on `module.exports.packageDefinition`. The `PackageLoader` detects that export and uses the contract-based install path to register tools, tables, and assistants. This is already set up in the template.
+Provider source is plain JavaScript. Do not import Node modules, React, or the Peers SDK there.
+Use only the guest APIs supplied by the isolated host, such as `registerContractTool`,
+`getOwnedTableRecord`, `saveOwnedTableRecord`, and owned persistent-variable helpers.
 
-## Reference
+## Adding a screen
 
-- [peers-app on GitHub](https://github.com/peers-app) — source, docs, and examples
-- `~/peers/packages/README.md` — overview of all your installed packages
+1. Generate a new 25-character Peers ID with `peers tools run new-id`.
+2. Add it to `src/ids.json` and export it from `src/consts.ts`.
+3. Create the React component under `src/ui/`.
+4. Add its route to `src/routes.ts`.
+5. Add its `IPeersUI` registration to `src/uis.ts`.
+
+## Runtime boundaries
+
+- Provider code is isolated in Electron.
+- Renderer UI is not a security boundary; it should access package data through contracts.
+- PWA currently skips isolated providers. Routes and UI can still load, but isolated contract
+  providers are unavailable until the PWA host adds an isolated runtime.
+
+See the published Peers package documentation and the `official-packages/isolation-smoke`
+reference package for the full artifact and guest API.
