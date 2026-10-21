@@ -88,14 +88,48 @@ physical identity from the package ID; do not add table IDs or physical names.
 2. Register the matching implementation in `src/provider-source.js`:
 
 ```javascript
-registerContractTool(CONTRACT_ID, 1, "toolName", function toolName(input) {
+registerContractTool(CONTRACT_ID, 1, "toolName", async function toolName(input, ctx) {
+  await ctx.setOwnedPersistentVar("device", "lastInput", input);
   return { result: input };
 });
 ```
 
+Each handler gets its arguments and a `ctx` with the host functions for that call:
+`ctx.getOwnedTableRecord`, `ctx.saveOwnedTableRecord`, the owned persistent-variable helpers,
+`ctx.emitContractEvent`, and `ctx.callConsumedTool` for contracts the package consumes. Calls
+and event callbacks can run at the same time. Start hooks run concurrently with each other;
+calls and event deliveries wait for all hooks to finish, while work a hook starts without
+awaiting can overlap later calls. The package orders the state these operations share:
+a handler that reads and then writes a row should run that change through a small
+queue kept in module state, for example:
+
+```javascript
+let changes = Promise.resolve();
+function queued(change) {
+  const run = changes.then(change, change);
+  changes = run.catch(() => undefined);
+  return run;
+}
+```
+
+Time spent waiting in the queue counts against the call's deadline.
+
+Code that should run when the worker starts (subscriptions, timers in privileged mode) goes in
+`onWorkerStart(async (ctx) => { ... })`. That `ctx` belongs to no call, so its
+`ctx.callConsumedTool` calls are denied, including calls to the package's own contracts. The
+worker's startup waits for the hook, and a hook that throws keeps the worker from starting, so
+don't await long-running work there.
+
+A call that runs past its deadline (30 seconds by default; a tool's `timeoutMs` can raise it to
+120 seconds) is rejected, but its handler keeps running. For longer
+work, save a job row, return its ID, and update the row as the work progresses. Once the call
+has returned or timed out, its `ctx` can still use owned tables, persistent variables, and
+events, but its `ctx.callConsumedTool` calls are denied, so that work can't call other
+contracts such as System HTTP.
+
 Provider source is plain JavaScript. Do not import Node modules, React, or the Peers SDK there.
-Use only the guest APIs supplied by the isolated host, such as `registerContractTool`,
-`getOwnedTableRecord`, `saveOwnedTableRecord`, and owned persistent-variable helpers.
+Use only the guest APIs supplied by the isolated host. See
+[Package contracts](https://peers-app.github.io/Packages/contracts) for the full guest API.
 
 ## Adding a screen
 

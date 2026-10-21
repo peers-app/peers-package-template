@@ -30,6 +30,8 @@ const artifact = {
   manifest: {
     packageId: ids.packageId,
     version: packageJson.version,
+    // Handlers take (args, ctx) and calls run concurrently.
+    guestApi: 2,
     tables: [],
     provides: [
       {
