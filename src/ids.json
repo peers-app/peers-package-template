@@ -1,7 +1,0 @@
-{
-  "packageId": "<package-id>",
-  "contractId": "<contract-id>",
-  "screenId": "<app-screen-id>",
-  "packageName": "<package-name>",
-  "stateObservableName": "state"
-}

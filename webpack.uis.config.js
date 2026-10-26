@@ -22,5 +22,7 @@ module.exports = {
   externals: {
     react: "React",
     "@peers-app/peers-sdk": "PeersSDK",
+    "@peers-app/peers-ui": "PeersUI",
+    zod: "zod",
   },
 };

@@ -10,27 +10,34 @@
     "packageId": "<package-id>"
   },
   "scripts": {
-    "build:package": "node build-package.mjs",
+    "generate-manifest": "peers-package manifest",
+    "build:package": "peers-package build",
     "build:routes": "webpack --mode production --no-watch --config webpack.routes.config.js",
     "build:uis": "webpack --mode production --no-watch --config webpack.uis.config.js",
     "build": "npm run build:package && npm run build:routes && npm run build:uis",
+    "dev:package": "peers-package build --watch",
     "dev:routes": "webpack --mode development --watch --config webpack.routes.config.js",
     "dev:uis": "webpack --mode development --watch --config webpack.uis.config.js",
-    "dev": "concurrently \"npm run dev:routes\" \"npm run dev:uis\"",
+    "dev": "concurrently \"npm run dev:package\" \"npm run dev:routes\" \"npm run dev:uis\"",
+    "test": "node --test src/app.test.mjs",
     "lint": "biome check .",
     "lint:fix": "biome check --write ."
   },
   "peerDependencies": {
-    "@peers-app/peers-sdk": "^0.23.7",
+    "@peers-app/peers-sdk": "^0.26.6",
+    "@peers-app/peers-ui": "^0.26.6",
     "react": "18.3.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.11",
     "@peers-app/peers-sdk": "latest",
+    "@peers-app/peers-ui": "latest",
     "@types/react": "18.3.1",
     "concurrently": "^9.1.0",
     "css-loader": "^7.1.2",
+    "esbuild": "^0.28.2",
     "react": "18.3.1",
+    "react-test-renderer": "18.3.1",
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.8.3",

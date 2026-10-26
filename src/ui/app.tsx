@@ -1,91 +1,98 @@
-import {
-  createContractConsumer,
-  getUserContext,
-  type IContractConsumer,
-  type IPeersUI,
-  waitForHostContractTransport,
-  zodAnyObjectOrArray,
-} from "@peers-app/peers-sdk";
-import { useEffect, useRef, useState } from "react";
-import { appScreenId, packageName, stateObservableName } from "../consts";
-import { packageContract } from "../contract";
+import { type IPeersUI, zodAnyObjectOrArray } from "@peers-app/peers-sdk";
+import { useRows, useTool } from "@peers-app/peers-ui";
+import { useState } from "react";
+import { appScreenId, packageName } from "../consts";
+import type { IItem } from "../data/items";
+import { app } from "./client";
 
-function getClickCount(value: unknown): number {
-  if (!value || typeof value !== "object" || !("clickCount" in value)) {
-    return 0;
-  }
-  const count = (value as { clickCount?: unknown }).clickCount;
-  return typeof count === "number" ? count : 0;
-}
-
+/** The starter screen: the group's list. Each change reaches every open copy through the table. */
 export function AppScreen() {
-  const [count, setCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>();
-  const consumerRef = useRef<IContractConsumer>();
-
-  useEffect(() => {
-    let cancelled = false;
-    let consumer: IContractConsumer | undefined;
-    let stateSubscription: { dispose(): void } | undefined;
-
-    void Promise.all([waitForHostContractTransport({ timeoutMs: 5_000 }), getUserContext()])
-      .then(async ([transport, userContext]) => {
-        const dataContextId = userContext.currentlyActiveGroupId() ?? userContext.userId;
-        consumer = createContractConsumer(packageContract, transport, { dataContextId });
-        await consumer.loadingPromise;
-        if (cancelled) {
-          consumer.dispose();
-          return;
-        }
-
-        const state = consumer.observables[stateObservableName];
-        setCount(getClickCount(state()));
-        stateSubscription = state.subscribe((value) => setCount(getClickCount(value)));
-        consumerRef.current = consumer;
-        setLoading(false);
-      })
-      .catch((err) => {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : String(err));
-          setLoading(false);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-      stateSubscription?.dispose();
-      consumer?.dispose();
-      consumerRef.current = undefined;
-    };
-  }, []);
-
-  const incrementCount = () => {
-    const state = consumerRef.current?.observables[stateObservableName];
-    if (!state) {
-      return;
-    }
-    state({ clickCount: getClickCount(state()) + 1 });
-  };
+  const [pageSize, setPageSize] = useState(100);
+  const { rows: items, error, loading } = useRows(app.tables.Items, {}, { pageSize });
 
   return (
     <main className="container py-4" style={{ maxWidth: "760px" }}>
       <h1 className="h3">{packageName}</h1>
-      <p className="text-body-secondary">
-        The UI bundle runs in the renderer. Shared state is hosted by the isolated package contract
-        without starting a provider worker.
-      </p>
-      <p>Persisted button clicks: {count}</p>
-      <button
-        className="btn btn-primary"
-        disabled={loading || Boolean(error)}
-        onClick={incrementCount}
-        type="button"
-      >
-        {loading ? "Loading…" : "Click me"}
-      </button>
-      {error && <div className="alert alert-danger mt-4">{error}</div>}
+      <AddItemForm />
+      {error && <div className="alert alert-danger mt-3">Couldn't load the list.</div>}
+      <ul className="list-group mt-3">
+        {items.map((item) => (
+          <ItemRow key={item.itemId} item={item} />
+        ))}
+      </ul>
+      {items.length >= pageSize && (
+        <button
+          className="btn btn-link"
+          type="button"
+          disabled={loading}
+          onClick={() => setPageSize((size) => size + 100)}
+        >
+          Show more
+        </button>
+      )}
     </main>
+  );
+}
+
+/** Adds an item through the `add-item` tool, as an assistant would. */
+function AddItemForm() {
+  const [text, setText] = useState("");
+  const add = useTool(app.tools["add-item"], { onSuccess: () => setText("") });
+
+  return (
+    <form
+      className="d-flex gap-2"
+      onSubmit={(event) => {
+        event.preventDefault();
+        void add.run({ text });
+      }}
+    >
+      <input
+        className="form-control"
+        placeholder="Add an item"
+        aria-label="New item"
+        value={text}
+        disabled={add.pending}
+        onChange={(event) => setText(event.target.value)}
+      />
+      <button className="btn btn-primary" type="submit" disabled={add.pending || !text.trim()}>
+        Add
+      </button>
+      {add.error && <div className="text-danger align-self-center">Couldn't add that.</div>}
+    </form>
+  );
+}
+
+/** One item: check it off or remove it, with the table's own save and delete. */
+function ItemRow({ item }: { item: IItem }) {
+  const save = useTool(app.tables.Items.save);
+  const remove = useTool(app.tables.Items.delete);
+  const pending = save.pending || remove.pending;
+
+  return (
+    <li className="list-group-item d-flex align-items-center gap-2">
+      <input
+        className="form-check-input mt-0"
+        type="checkbox"
+        aria-label={`Done: ${item.text}`}
+        checked={item.done}
+        disabled={pending}
+        onChange={() => void save.run({ ...item, done: !item.done })}
+      />
+      <span className="flex-grow-1" style={{ textDecoration: item.done ? "line-through" : "none" }}>
+        {item.text}
+      </span>
+      <button
+        className="btn btn-sm btn-outline-secondary"
+        type="button"
+        disabled={pending}
+        onClick={() => void remove.run(item.itemId)}
+      >
+        Remove
+      </button>
+      {save.error && <span className="text-danger">Couldn't save that item.</span>}
+      {remove.error && <span className="text-danger">Couldn't remove that item.</span>}
+    </li>
   );
 }
 
