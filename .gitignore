@@ -2,3 +2,6 @@
 node_modules
 dist
 package-lock.json
+
+# Local Claude Code settings: never commit or publish them
+.claude/
