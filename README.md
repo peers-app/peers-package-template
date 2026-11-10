@@ -57,7 +57,7 @@ call the contract through the host, like any other client.
   The screen calls it with `useTool(app.tools["name"])`.
 - **Shared state:** an observable over a `groupVar` (`defineObservable`), read in the screen
   with `useObservable`.
-- **A screen:** make an id with `peers tools run new-id` and add it to `src/consts.ts`, write the
+- **A screen:** make an id with `peers new-id` and add it to `src/consts.ts`, write the
   component in `src/ui/`, then add its route to `src/routes.ts` and its UI to `src/uis.ts`.
 - **Another package's contract:** `pkg.consumes(ref)`, then call it from a handler.
 

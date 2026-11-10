@@ -1,4 +1,4 @@
-// Peers ids are 25 alphanumeric characters (`peers tools run new-id` makes one).
+// Peers ids are 25 alphanumeric characters (`peers new-id` makes one).
 // `peers packages create` fills these in.
 
 export const packageId = "<package-id>";
